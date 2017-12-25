@@ -1,0 +1,17 @@
+{
+  "changes": [
+    {
+      "id": 153973691,
+      "change_type": "update",
+      "kind": "story",
+      "name": "Hey, World!",
+      "new_values": {
+        "description": "Lorem body stuff",
+        "name": "Hey, World!"
+      },
+      "original_values": {
+        "name": "Hello world"
+      }
+    }
+  ]
+}

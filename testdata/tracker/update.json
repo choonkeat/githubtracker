@@ -1,0 +1,16 @@
+{
+  "changes": [
+    {
+      "id": 153898290,
+      "change_type": "update",
+      "kind": "story",
+      "name": "As an X user, I should be able to do Y with Z",
+      "new_values": {
+        "name": "As an X user, I should be able to do Y with Z"
+      },
+      "original_values": {
+        "name": "As an X user, I must be able to do Y with Z"
+      }
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "action": "closed",
+  "issue": {
+    "title": "some story from ghe",
+    "body": "https://www.pivotaltracker.com/story/show/153984041\r\n\r\n",
+    "state": "closed",
+    "html_url": "https://github.com/user123/repo456/issues/8",
+    "created_at": "2018-01-02T03:35:30Z",
+    "updated_at": "2018-01-03T00:57:02Z"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "changes": [
+    {
+      "id": 153926473,
+      "change_type": "delete",
+      "kind": "story",
+      "name": "should create/update github issue on pt story create/update"
+    }
+  ]
+}

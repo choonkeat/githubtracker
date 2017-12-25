@@ -1,0 +1,16 @@
+{
+  "changes": [
+    {
+      "id": 153926863,
+      "change_type": "update",
+      "kind": "story",
+      "name": "do we use commit message linkage? or based on issue open/close?",
+      "new_values": {
+        "description": "https://github.com/user123/repo456/issues/5\n\nesp since commit message linkage is using a large number `#1234` that in-theory overlaps with github issue numbering\n\nfunny thing?"
+      },
+      "original_values": {
+        "description": "https://github.com/user123/repo456/issues/5\n\nesp since commit message linkage is using a large number `#1234` that in-theory overlaps with github issue numbering"
+      }
+    }
+  ]
+}

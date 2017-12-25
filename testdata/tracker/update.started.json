@@ -1,0 +1,28 @@
+{
+  "changes": [
+    {
+      "id": 19570157,
+      "change_type": "update",
+      "kind": "label",
+      "name": "label1",
+      "new_values": {},
+      "original_values": {}
+    },
+    {
+      "id": 19570497,
+      "change_type": "update",
+      "kind": "label",
+      "name": "label two",
+      "new_values": {},
+      "original_values": {}
+    },
+    {
+      "id": 153898290,
+      "change_type": "update",
+      "kind": "story",
+      "name": "As an X user, I should be able to do Y with Z",
+      "new_values": {},
+      "original_values": {}
+    }
+  ]
+}

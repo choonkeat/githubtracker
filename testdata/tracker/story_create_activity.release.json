@@ -1,0 +1,16 @@
+{
+  "changes": [
+    {
+      "id": 154042267,
+      "change_type": "create",
+      "kind": "story",
+      "story_type": "release",
+      "name": "release marker 1",
+      "new_values": {
+        "name": "release marker 1",
+        "current_state": "unstarted"
+      },
+      "original_values": {}
+    }
+  ]
+}

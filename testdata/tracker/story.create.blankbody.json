@@ -1,0 +1,15 @@
+{
+  "changes": [
+    {
+      "id": 153937786,
+      "change_type": "create",
+      "kind": "story",
+      "name": "should create a story on pivotal tracker",
+      "new_values": {
+        "description": "",
+        "name": "should create a story on pivotal tracker"
+      },
+      "original_values": {}
+    }
+  ]
+}

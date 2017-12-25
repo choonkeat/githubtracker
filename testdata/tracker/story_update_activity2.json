@@ -1,0 +1,16 @@
+{
+  "changes": [
+    {
+      "id": 153926473,
+      "change_type": "update",
+      "kind": "story",
+      "name": "should create/update github issue on pt story create/update",
+      "new_values": {
+        "description": "https://github.com/user123/repo456/issues/4\n\nok last bit"
+      },
+      "original_values": {
+        "description": "https://github.com/user123/repo456/issues/4\n\ncreate me and then you"
+      }
+    }
+  ]
+}
