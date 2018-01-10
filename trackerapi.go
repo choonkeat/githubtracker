@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -116,7 +117,7 @@ func (t trackerAPI) FindStory(story *storyDetail) (*trackerSearchResultRow, erro
 }
 
 func (t trackerAPI) perform(method, url string, body []byte) ([]byte, error) {
-	fmt.Println(method, url, string(body))
+	log.Println(method, url, string(body))
 	req, err := http.NewRequest(method, url, bytes.NewReader(body))
 	if err != nil {
 		return nil, errors.Wrapf(err, "new request: %s %s %s", method, url, string(body))

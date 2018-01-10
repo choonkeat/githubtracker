@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -101,7 +102,7 @@ func (g githubAPI) FindIssue(issue *issueDetail) (*githubSearchResultRow, error)
 }
 
 func (g githubAPI) perform(method, url string, body []byte, expectedStatus int) ([]byte, error) {
-	fmt.Println(method, url, string(body))
+	log.Println(method, url, string(body))
 	req, err := http.NewRequest(method, url, bytes.NewReader(body))
 	if err != nil {
 		return nil, errors.Wrapf(err, "%s %s %s", method, url, body)

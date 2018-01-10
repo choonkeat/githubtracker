@@ -100,6 +100,7 @@ func (s WebhookIssueHandler) handle(data []byte, client trackerAPIClient, htmlUR
 			fmt.Printf("found %#v\n", found)
 			switch cs := found.CurrentState; cs {
 			case storyStateStarted, storyStatePlanned, storyStateUnstarted, storyStateUnscheduled, storyStateRejected:
+				// not touching CurrentState
 			default:
 				story.CurrentState = storyStateStarted
 			}

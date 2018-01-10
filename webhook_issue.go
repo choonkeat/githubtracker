@@ -94,22 +94,22 @@ func ptStoryFromWebhookIssue(issue *webhookIssue) (*storyDetail, error) {
 	filters := []string{}
 
 	bodyStrip := bodyStripRegexpFor(issue.trackerHTMLURL)
-	log.Printf("bodyStrip=%s", bodyStrip.String())
+	fmt.Printf("bodyStrip=%s\n", bodyStrip.String())
 
 	if res := bodyStrip.FindAllStringSubmatch(issue.Body, 1); res != nil {
-		log.Printf("res=%#v", res)
+		fmt.Printf("res=%#v\n", res)
 		filters = append(filters, `id:"`+res[0][1]+`"`)
 	}
 
 	if issue.bodyWas != nil {
 		if res := bodyStrip.FindAllStringSubmatch(*issue.bodyWas, 1); res != nil {
-			log.Printf("res=%#v", res)
+			fmt.Printf("res=%#v\n", res)
 			filters = append(filters, `id:"`+res[0][1]+`"`)
 		}
 	}
 
 	if res := bodyStrip.FindAllStringSubmatch(issue.Body, 1); res != nil {
-		log.Printf("res=%#v", res)
+		fmt.Printf("res=%#v\n", res)
 		filters = append(filters, `id:"`+res[0][1]+`"`)
 	}
 
