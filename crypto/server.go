@@ -45,6 +45,10 @@ func (s Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			    <br>
 			    <input size="100" name="api_url" value="https://www.pivotaltracker.com/services/v5/projects/<xxx>" required><br>
 			    <input size="100" name="html_url" value="https://www.pivotaltracker.com" required><br>
+					<label><small>
+						<input type="checkbox" name="estimate_chores" value="1"> Bugs and Chores May Be Given Points
+						<a target="_blank" href="https://www.pivotaltracker.com/help/articles/planning_with_velocity/#bugs-and-chores-arent-estimable-by-default">Strongly discouraged!</a>
+					</small></label><br>
 			    <input size="100" name="target_path" value="` + path.Join(s.PathPrefix, "github") + `/" type="hidden"><br>
 			    <input type="submit">
 			  </form>

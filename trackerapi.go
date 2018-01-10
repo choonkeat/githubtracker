@@ -34,6 +34,7 @@ type storyDetail struct {
 	Body          string   `json:"description,omitempty"`
 	SearchFilters []string `json:"-"`
 	IsDone        bool     `json:"-"`
+	Estimate      *int     `json:"estimate,omitempty"`
 	CurrentState  string   `json:"current_state,omitempty"`
 	StoryType     string   `json:"story_type,omitempty"`
 }
@@ -43,13 +44,15 @@ type trackerAPIClient interface {
 	CreateStory(story *storyDetail) error
 	UpdateStory(story *storyDetail, rs *trackerSearchResultRow) error
 	GetStory(storyID string) (*trackerSearchResultRow, error)
+	RequiresChoreEstimate() bool
 }
 
 type trackerAPI struct {
-	Token   string
-	URL     string
-	HTMLURL string
-	Client  *http.Client
+	Token          string
+	URL            string
+	HTMLURL        string
+	EstimateChores bool
+	Client         *http.Client
 }
 
 type trackerSearchResult struct {
@@ -169,6 +172,10 @@ func (t trackerAPI) UpdateStory(story *storyDetail, rs *trackerSearchResultRow) 
 
 	_, err = t.perform("PUT", targetURL, targetJSON)
 	return err
+}
+
+func (t trackerAPI) RequiresChoreEstimate() bool {
+	return t.EstimateChores
 }
 
 // ensure we implement the interface

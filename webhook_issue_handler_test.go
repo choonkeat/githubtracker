@@ -11,6 +11,7 @@ type logTrackerClient struct {
 	History            []logTrackerAction
 	ExpectedFoundStory *trackerSearchResultRow
 	ExpectedError      error
+	EstimateChores     bool
 }
 
 type logTrackerAction struct {
@@ -20,6 +21,7 @@ type logTrackerAction struct {
 	GivenBody          string
 	GivenIsDone        bool
 	GivenSearchFilters []string
+	GivenEstimate      *int
 	GivenCurrentState  string
 	GivenStoryType     string
 }
@@ -42,6 +44,7 @@ func (l *logTrackerClient) FindStory(story *storyDetail) (*trackerSearchResultRo
 		GivenBody:          story.Body,
 		GivenIsDone:        story.IsDone,
 		GivenSearchFilters: story.SearchFilters,
+		GivenEstimate:      story.Estimate,
 		GivenCurrentState:  story.CurrentState,
 		GivenStoryType:     story.StoryType,
 	})
@@ -55,6 +58,7 @@ func (l *logTrackerClient) CreateStory(story *storyDetail) error {
 		GivenBody:          story.Body,
 		GivenIsDone:        story.IsDone,
 		GivenSearchFilters: story.SearchFilters,
+		GivenEstimate:      story.Estimate,
 		GivenCurrentState:  story.CurrentState,
 		GivenStoryType:     story.StoryType,
 	})
@@ -69,18 +73,28 @@ func (l *logTrackerClient) UpdateStory(story *storyDetail, rs *trackerSearchResu
 		GivenBody:          story.Body,
 		GivenIsDone:        story.IsDone,
 		GivenSearchFilters: story.SearchFilters,
+		GivenEstimate:      story.Estimate,
 		GivenCurrentState:  story.CurrentState,
 		GivenStoryType:     story.StoryType,
 	})
 	return l.ExpectedError
 }
 
+func (l *logTrackerClient) RequiresChoreEstimate() bool {
+	return l.EstimateChores
+}
+
+func intptr(i int) *int {
+	return &i
+}
+
 func TestTrackerAPIClient(t *testing.T) {
 	testCases := []struct {
-		givenFile       string
-		givenFoundStory *trackerSearchResultRow
-		givenError      error
-		expectedHistory []logTrackerAction
+		givenFile                 string
+		givenFoundStory           *trackerSearchResultRow
+		givenError                error
+		givenChoresCanBeEstimated bool
+		expectedHistory           []logTrackerAction
 	}{
 		{
 			givenFile: "testdata/github/issues.new.json",
@@ -132,6 +146,24 @@ func TestTrackerAPIClient(t *testing.T) {
 				StoryType:    "feature",
 				CurrentState: storyStateUnscheduled,
 			},
+			givenChoresCanBeEstimated: true,
+			expectedHistory: []logTrackerAction{
+				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}},
+				logTrackerAction{Method: "GetStory", GivenID: "42", GivenTitle: "", GivenBody: "", GivenIsDone: false, GivenSearchFilters: []string(nil), GivenCurrentState: "", GivenStoryType: ""},
+				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}, GivenEstimate: intptr(0), GivenCurrentState: "accepted", GivenStoryType: "chore"},
+			},
+		},
+		{
+			givenFile: "testdata/github/issues.closed.json",
+			givenFoundStory: &trackerSearchResultRow{
+				ID:           alwaysString{Value: "42"},
+				Name:         "found title",
+				Description:  "found description",
+				Estimate:     0,
+				Kind:         "story",
+				StoryType:    "feature",
+				CurrentState: storyStateUnscheduled,
+			},
 			expectedHistory: []logTrackerAction{
 				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}},
 				logTrackerAction{Method: "GetStory", GivenID: "42", GivenTitle: "", GivenBody: "", GivenIsDone: false, GivenSearchFilters: []string(nil), GivenCurrentState: "", GivenStoryType: ""},
@@ -149,10 +181,46 @@ func TestTrackerAPIClient(t *testing.T) {
 				StoryType:    storyTypeBug,
 				CurrentState: storyStateUnscheduled,
 			},
+			givenChoresCanBeEstimated: true,
+			expectedHistory: []logTrackerAction{
+				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}},
+				logTrackerAction{Method: "GetStory", GivenID: "42", GivenTitle: "", GivenBody: "", GivenIsDone: false, GivenSearchFilters: []string(nil), GivenCurrentState: "", GivenStoryType: ""},
+				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}, GivenEstimate: intptr(0), GivenCurrentState: "accepted"},
+			},
+		},
+		{
+			givenFile: "testdata/github/issues.closed.json",
+			givenFoundStory: &trackerSearchResultRow{
+				ID:           alwaysString{Value: "42"},
+				Name:         "found title",
+				Description:  "found description",
+				Estimate:     0,
+				Kind:         "story",
+				StoryType:    storyTypeBug,
+				CurrentState: storyStateUnscheduled,
+			},
 			expectedHistory: []logTrackerAction{
 				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}},
 				logTrackerAction{Method: "GetStory", GivenID: "42", GivenTitle: "", GivenBody: "", GivenIsDone: false, GivenSearchFilters: []string(nil), GivenCurrentState: "", GivenStoryType: ""},
 				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}, GivenCurrentState: "accepted"},
+			},
+		},
+		{
+			givenFile: "testdata/github/issues.closed.json",
+			givenFoundStory: &trackerSearchResultRow{
+				ID:           alwaysString{Value: "42"},
+				Name:         "found title",
+				Description:  "found description",
+				Estimate:     1,
+				Kind:         "story",
+				StoryType:    storyTypeBug,
+				CurrentState: storyStateRejected,
+			},
+			givenChoresCanBeEstimated: true,
+			expectedHistory: []logTrackerAction{
+				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}},
+				logTrackerAction{Method: "GetStory", GivenID: "42", GivenTitle: "", GivenBody: "", GivenIsDone: false, GivenSearchFilters: []string(nil), GivenCurrentState: "", GivenStoryType: ""},
+				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}, GivenEstimate: intptr(1), GivenCurrentState: storyStateAccepted},
 			},
 		},
 		{
@@ -190,6 +258,7 @@ func TestTrackerAPIClient(t *testing.T) {
 			logclient := logTrackerClient{
 				ExpectedFoundStory: tc.givenFoundStory,
 				ExpectedError:      tc.givenError,
+				EstimateChores:     tc.givenChoresCanBeEstimated,
 			}
 			s := WebhookIssueHandler{}
 			err = s.handle(data, &logclient, "https://www.pivotaltracker.com")

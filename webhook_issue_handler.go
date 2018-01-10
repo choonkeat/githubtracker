@@ -25,9 +25,10 @@ func (s WebhookIssueHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	values := crypto.ValuesFromContext(r.Context())
 	client := trackerAPI{
-		Client: http.DefaultClient,
-		Token:  values.Get("token"),
-		URL:    values.Get("api_url"),
+		Client:         http.DefaultClient,
+		Token:          values.Get("token"),
+		URL:            values.Get("api_url"),
+		EstimateChores: (values.Get("estimate_chores") == "1"),
 	}
 	if err = s.handle(data, client, values.Get("html_url")); err != nil {
 		log.Println(err.Error())
@@ -53,6 +54,7 @@ func (s WebhookIssueHandler) handle(data []byte, client trackerAPIClient, htmlUR
 		log.Println("no story")
 		return nil
 	}
+	log.Printf("story=%#v", story)
 
 	rs, err := client.FindStory(story)
 	if err == multipleMatchesError {
@@ -88,10 +90,14 @@ func (s WebhookIssueHandler) handle(data []byte, client trackerAPIClient, htmlUR
 				} else {
 					story.CurrentState = storyStateAccepted
 				}
+				if client.RequiresChoreEstimate() {
+					story.Estimate = &found.Estimate
+				}
 			}
 		}
 	}
 
+	log.Printf("updating story=%#v with client.RequiresChoreEstimate=%#v", story, client.RequiresChoreEstimate())
 	if err = client.UpdateStory(story, rs); err != nil {
 		return errors.Wrapf(err, "UpdateStory %#v", story)
 	}
