@@ -63,6 +63,12 @@ func (s WebhookIssueHandler) handle(data []byte, client trackerAPIClient, htmlUR
 		return errors.Wrapf(err, "FindStory %#v", story)
 	}
 	if rs == nil {
+		if story.IsDone {
+			// finishing an issue that had no story?
+			// issue was created before github-pt sync
+			// don't do anything on pt, let the issue close
+			return nil
+		}
 		if err = client.CreateStory(story); err != nil {
 			return errors.Wrapf(err, "CreateStory %#v", story)
 		}

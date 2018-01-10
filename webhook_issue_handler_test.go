@@ -172,6 +172,12 @@ func TestTrackerAPIClient(t *testing.T) {
 				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}, GivenCurrentState: storyStateAccepted},
 			},
 		},
+		{
+			givenFile: "testdata/github/issues.closed.json",
+			expectedHistory: []logTrackerAction{
+				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}},
+			},
+		},
 	}
 
 	for _, tc := range testCases {
