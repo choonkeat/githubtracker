@@ -19,7 +19,7 @@ type logTrackerAction struct {
 	GivenID            string
 	GivenTitle         string
 	GivenBody          string
-	GivenIsDone        bool
+	GivenIsClosed      bool
 	GivenSearchFilters []string
 	GivenEstimate      *int
 	GivenCurrentState  string
@@ -42,7 +42,7 @@ func (l *logTrackerClient) FindStory(story *storyDetail) (*trackerSearchResultRo
 		Method:             "FindStory",
 		GivenTitle:         story.Title,
 		GivenBody:          story.Body,
-		GivenIsDone:        story.IsDone,
+		GivenIsClosed:      story.IsClosed,
 		GivenSearchFilters: story.SearchFilters,
 		GivenEstimate:      story.Estimate,
 		GivenCurrentState:  story.CurrentState,
@@ -56,7 +56,7 @@ func (l *logTrackerClient) CreateStory(story *storyDetail) error {
 		Method:             "CreateIssue",
 		GivenTitle:         story.Title,
 		GivenBody:          story.Body,
-		GivenIsDone:        story.IsDone,
+		GivenIsClosed:      story.IsClosed,
 		GivenSearchFilters: story.SearchFilters,
 		GivenEstimate:      story.Estimate,
 		GivenCurrentState:  story.CurrentState,
@@ -71,7 +71,7 @@ func (l *logTrackerClient) UpdateStory(story *storyDetail, rs *trackerSearchResu
 		GivenID:            rs.ID.String(),
 		GivenTitle:         story.Title,
 		GivenBody:          story.Body,
-		GivenIsDone:        story.IsDone,
+		GivenIsClosed:      story.IsClosed,
 		GivenSearchFilters: story.SearchFilters,
 		GivenEstimate:      story.Estimate,
 		GivenCurrentState:  story.CurrentState,
@@ -99,8 +99,8 @@ func TestTrackerAPIClient(t *testing.T) {
 		{
 			givenFile: "testdata/github/issues.new.json",
 			expectedHistory: []logTrackerAction{
-				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "users.email should have unique constraint", GivenBody: "https://github.com/user123/repo456/issues/1\r\n\r\notherwise one two three four five", GivenIsDone: false, GivenSearchFilters: []string{"name:\"users.email should have unique constraint\""}},
-				logTrackerAction{Method: "CreateIssue", GivenID: "", GivenTitle: "users.email should have unique constraint", GivenBody: "https://github.com/user123/repo456/issues/1\r\n\r\notherwise one two three four five", GivenIsDone: false, GivenSearchFilters: []string{"name:\"users.email should have unique constraint\""}},
+				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "users.email should have unique constraint", GivenBody: "https://github.com/user123/repo456/issues/1\r\n\r\notherwise one two three four five", GivenIsClosed: false, GivenSearchFilters: []string{"name:\"users.email should have unique constraint\""}},
+				logTrackerAction{Method: "CreateIssue", GivenID: "", GivenTitle: "users.email should have unique constraint", GivenBody: "https://github.com/user123/repo456/issues/1\r\n\r\notherwise one two three four five", GivenIsClosed: false, GivenSearchFilters: []string{"name:\"users.email should have unique constraint\""}},
 			},
 		},
 		{
@@ -115,8 +115,8 @@ func TestTrackerAPIClient(t *testing.T) {
 				CurrentState: storyStateUnscheduled,
 			},
 			expectedHistory: []logTrackerAction{
-				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "should have unique index on users.email column [Finished #12345]", GivenBody: "https://github.com/user123/repo456/issues/1\r\n\r\notherwise one two three four five", GivenIsDone: false, GivenSearchFilters: []string{"name:\"users.email should have unique constraint\"", "name:\"should have unique index on users.email column [Finished #12345]\""}},
-				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "should have unique index on users.email column [Finished #12345]", GivenBody: "https://github.com/user123/repo456/issues/1\r\n\r\notherwise one two three four five", GivenIsDone: false, GivenSearchFilters: []string{"name:\"users.email should have unique constraint\"", "name:\"should have unique index on users.email column [Finished #12345]\""}},
+				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "should have unique index on users.email column [Finished #12345]", GivenBody: "https://github.com/user123/repo456/issues/1\r\n\r\notherwise one two three four five", GivenIsClosed: false, GivenSearchFilters: []string{"name:\"users.email should have unique constraint\"", "name:\"should have unique index on users.email column [Finished #12345]\""}},
+				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "should have unique index on users.email column [Finished #12345]", GivenBody: "https://github.com/user123/repo456/issues/1\r\n\r\notherwise one two three four five", GivenIsClosed: false, GivenSearchFilters: []string{"name:\"users.email should have unique constraint\"", "name:\"should have unique index on users.email column [Finished #12345]\""}},
 			},
 		},
 		{
@@ -131,8 +131,8 @@ func TestTrackerAPIClient(t *testing.T) {
 				CurrentState: storyStateUnscheduled,
 			},
 			expectedHistory: []logTrackerAction{
-				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "should have unique index on users.email column[fixed #12345]", GivenBody: "https://github.com/user123/repo456/issues/1\r\n\r\notherwise one two three four five\r\n\r\n- [ ] what else?", GivenIsDone: false, GivenSearchFilters: []string{"name:\"should have unique index on users.email column[fixed #12345]\""}},
-				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "should have unique index on users.email column[fixed #12345]", GivenBody: "https://github.com/user123/repo456/issues/1\r\n\r\notherwise one two three four five\r\n\r\n- [ ] what else?", GivenIsDone: false, GivenSearchFilters: []string{"name:\"should have unique index on users.email column[fixed #12345]\""}},
+				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "should have unique index on users.email column[fixed #12345]", GivenBody: "https://github.com/user123/repo456/issues/1\r\n\r\notherwise one two three four five\r\n\r\n- [ ] what else?", GivenIsClosed: false, GivenSearchFilters: []string{"name:\"should have unique index on users.email column[fixed #12345]\""}},
+				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "should have unique index on users.email column[fixed #12345]", GivenBody: "https://github.com/user123/repo456/issues/1\r\n\r\notherwise one two three four five\r\n\r\n- [ ] what else?", GivenIsClosed: false, GivenSearchFilters: []string{"name:\"should have unique index on users.email column[fixed #12345]\""}},
 			},
 		},
 		{
@@ -148,9 +148,9 @@ func TestTrackerAPIClient(t *testing.T) {
 			},
 			givenChoresCanBeEstimated: true,
 			expectedHistory: []logTrackerAction{
-				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}},
-				logTrackerAction{Method: "GetStory", GivenID: "42", GivenTitle: "", GivenBody: "", GivenIsDone: false, GivenSearchFilters: []string(nil), GivenCurrentState: "", GivenStoryType: ""},
-				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}, GivenEstimate: intptr(0), GivenCurrentState: "accepted", GivenStoryType: "chore"},
+				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsClosed: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}},
+				logTrackerAction{Method: "GetStory", GivenID: "42", GivenTitle: "", GivenBody: "", GivenIsClosed: false, GivenSearchFilters: []string(nil), GivenCurrentState: "", GivenStoryType: ""},
+				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsClosed: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}, GivenEstimate: intptr(0), GivenCurrentState: "accepted", GivenStoryType: "chore"},
 			},
 		},
 		{
@@ -165,9 +165,9 @@ func TestTrackerAPIClient(t *testing.T) {
 				CurrentState: storyStateUnscheduled,
 			},
 			expectedHistory: []logTrackerAction{
-				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}},
-				logTrackerAction{Method: "GetStory", GivenID: "42", GivenTitle: "", GivenBody: "", GivenIsDone: false, GivenSearchFilters: []string(nil), GivenCurrentState: "", GivenStoryType: ""},
-				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}, GivenCurrentState: "accepted", GivenStoryType: "chore"},
+				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsClosed: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}},
+				logTrackerAction{Method: "GetStory", GivenID: "42", GivenTitle: "", GivenBody: "", GivenIsClosed: false, GivenSearchFilters: []string(nil), GivenCurrentState: "", GivenStoryType: ""},
+				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsClosed: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}, GivenCurrentState: "accepted", GivenStoryType: "chore"},
 			},
 		},
 		{
@@ -183,9 +183,9 @@ func TestTrackerAPIClient(t *testing.T) {
 			},
 			givenChoresCanBeEstimated: true,
 			expectedHistory: []logTrackerAction{
-				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}},
-				logTrackerAction{Method: "GetStory", GivenID: "42", GivenTitle: "", GivenBody: "", GivenIsDone: false, GivenSearchFilters: []string(nil), GivenCurrentState: "", GivenStoryType: ""},
-				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}, GivenEstimate: intptr(0), GivenCurrentState: "accepted"},
+				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsClosed: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}},
+				logTrackerAction{Method: "GetStory", GivenID: "42", GivenTitle: "", GivenBody: "", GivenIsClosed: false, GivenSearchFilters: []string(nil), GivenCurrentState: "", GivenStoryType: ""},
+				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsClosed: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}, GivenEstimate: intptr(0), GivenCurrentState: "accepted"},
 			},
 		},
 		{
@@ -200,9 +200,9 @@ func TestTrackerAPIClient(t *testing.T) {
 				CurrentState: storyStateUnscheduled,
 			},
 			expectedHistory: []logTrackerAction{
-				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}},
-				logTrackerAction{Method: "GetStory", GivenID: "42", GivenTitle: "", GivenBody: "", GivenIsDone: false, GivenSearchFilters: []string(nil), GivenCurrentState: "", GivenStoryType: ""},
-				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}, GivenCurrentState: "accepted"},
+				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsClosed: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}},
+				logTrackerAction{Method: "GetStory", GivenID: "42", GivenTitle: "", GivenBody: "", GivenIsClosed: false, GivenSearchFilters: []string(nil), GivenCurrentState: "", GivenStoryType: ""},
+				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsClosed: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}, GivenCurrentState: "accepted"},
 			},
 		},
 		{
@@ -218,9 +218,9 @@ func TestTrackerAPIClient(t *testing.T) {
 			},
 			givenChoresCanBeEstimated: true,
 			expectedHistory: []logTrackerAction{
-				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}},
-				logTrackerAction{Method: "GetStory", GivenID: "42", GivenTitle: "", GivenBody: "", GivenIsDone: false, GivenSearchFilters: []string(nil), GivenCurrentState: "", GivenStoryType: ""},
-				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}, GivenEstimate: intptr(1), GivenCurrentState: storyStateAccepted},
+				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsClosed: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}},
+				logTrackerAction{Method: "GetStory", GivenID: "42", GivenTitle: "", GivenBody: "", GivenIsClosed: false, GivenSearchFilters: []string(nil), GivenCurrentState: "", GivenStoryType: ""},
+				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsClosed: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}, GivenEstimate: intptr(1), GivenCurrentState: storyStateAccepted},
 			},
 		},
 		{
@@ -235,15 +235,15 @@ func TestTrackerAPIClient(t *testing.T) {
 				CurrentState: storyStateRejected,
 			},
 			expectedHistory: []logTrackerAction{
-				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}},
-				logTrackerAction{Method: "GetStory", GivenID: "42", GivenTitle: "", GivenBody: "", GivenIsDone: false, GivenSearchFilters: []string(nil), GivenCurrentState: "", GivenStoryType: ""},
-				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}, GivenCurrentState: storyStateAccepted},
+				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsClosed: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}},
+				logTrackerAction{Method: "GetStory", GivenID: "42", GivenTitle: "", GivenBody: "", GivenIsClosed: false, GivenSearchFilters: []string(nil), GivenCurrentState: "", GivenStoryType: ""},
+				logTrackerAction{Method: "UpdateStory", GivenID: "42", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsClosed: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}, GivenCurrentState: storyStateAccepted},
 			},
 		},
 		{
 			givenFile: "testdata/github/issues.closed.json",
 			expectedHistory: []logTrackerAction{
-				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsDone: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}},
+				logTrackerAction{Method: "FindStory", GivenID: "", GivenTitle: "some story from ghe", GivenBody: "https://github.com/user123/repo456/issues/8\r\n\r\n", GivenIsClosed: true, GivenSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""}},
 			},
 		},
 	}

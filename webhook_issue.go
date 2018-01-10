@@ -15,7 +15,7 @@ import (
 
 type webhookIssue struct {
 	isClosed       bool
-	isCreated      bool
+	isOpened       bool
 	Title          string    `json:"title"`
 	Body           string    `json:"body"`
 	State          string    `json:"state"`
@@ -68,7 +68,7 @@ func parseWebhookIssue(data []byte, htmlURL string) (*webhookIssue, error) {
 	}
 
 	wh.WebhookIssue.isClosed = (wh.Action == "closed")
-	wh.WebhookIssue.isCreated = (wh.Action == "opened")
+	wh.WebhookIssue.isOpened = (wh.Action == "opened" || wh.Action == "reopened")
 	wh.WebhookIssue.titleWas = wh.Changes["title"].String()
 	wh.WebhookIssue.bodyWas = wh.Changes["body"].String()
 	wh.WebhookIssue.trackerHTMLURL = htmlURL
@@ -81,7 +81,7 @@ func bodyStripRegexpFor(s string) *regexp.Regexp {
 
 // ptStoryFromWebhookIssue returns nil if storyDetail is not meant to be updated
 func ptStoryFromWebhookIssue(issue *webhookIssue) (*storyDetail, error) {
-	if !issue.isClosed && !issue.isCreated && !issue.isChanged() {
+	if !issue.isClosed && !issue.isOpened && !issue.isChanged() {
 		return nil, nil
 	}
 
@@ -124,7 +124,8 @@ func ptStoryFromWebhookIssue(issue *webhookIssue) (*storyDetail, error) {
 		Title:         strippedTitle,
 		Body:          buf.String(),
 		SearchFilters: filters,
-		IsDone:        issue.isClosed,
+		IsClosed:      issue.isClosed,
+		IsOpened:      issue.isOpened,
 	}
 	return &story, nil
 }

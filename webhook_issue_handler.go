@@ -65,7 +65,7 @@ func (s WebhookIssueHandler) handle(data []byte, client trackerAPIClient, htmlUR
 		return errors.Wrapf(err, "FindStory %#v", story)
 	}
 	if rs == nil {
-		if story.IsDone {
+		if story.IsClosed {
 			// finishing an issue that had no story?
 			// issue was created before github-pt sync
 			// don't do anything on pt, let the issue close
@@ -77,7 +77,7 @@ func (s WebhookIssueHandler) handle(data []byte, client trackerAPIClient, htmlUR
 		return nil
 	}
 
-	if story.IsDone {
+	if story.IsClosed {
 		if found, err := client.GetStory(rs.ID.String()); err == nil {
 			fmt.Printf("found %#v\n", found)
 			switch cs := found.CurrentState; cs {
@@ -93,6 +93,15 @@ func (s WebhookIssueHandler) handle(data []byte, client trackerAPIClient, htmlUR
 				if client.RequiresChoreEstimate() {
 					story.Estimate = &found.Estimate
 				}
+			}
+		}
+	} else if story.IsOpened {
+		if found, err := client.GetStory(rs.ID.String()); err == nil {
+			fmt.Printf("found %#v\n", found)
+			switch cs := found.CurrentState; cs {
+			case storyStateStarted, storyStatePlanned, storyStateUnstarted, storyStateUnscheduled, storyStateRejected:
+			default:
+				story.CurrentState = storyStateStarted
 			}
 		}
 	}

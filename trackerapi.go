@@ -33,7 +33,8 @@ type storyDetail struct {
 	Title         string   `json:"name,omitempty"`
 	Body          string   `json:"description,omitempty"`
 	SearchFilters []string `json:"-"`
-	IsDone        bool     `json:"-"`
+	IsClosed      bool     `json:"-"`
+	IsOpened      bool     `json:"-"`
 	Estimate      *int     `json:"estimate,omitempty"`
 	CurrentState  string   `json:"current_state,omitempty"`
 	StoryType     string   `json:"story_type,omitempty"`

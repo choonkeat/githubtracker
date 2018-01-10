@@ -16,7 +16,7 @@ func TestPtStoryFromWebhookIssue(t *testing.T) {
 		givenFile                   string
 		expectedTitle, expectedBody string
 		expectedSearchFilters       []string
-		expectedIsDone              bool
+		expectedIsClosed            bool
 		expectNoIssue               bool
 		expectNoChange              bool
 	}{
@@ -63,7 +63,7 @@ func TestPtStoryFromWebhookIssue(t *testing.T) {
 			expectedTitle:         "some story from ghe",
 			expectedBody:          "https://github.com/user123/repo456/issues/8\r\n\r\n",
 			expectedSearchFilters: []string{"id:\"153984041\"", "id:\"153984041\"", "name:\"some story from ghe\""},
-			expectedIsDone:        true,
+			expectedIsClosed:      true,
 		},
 		{
 			givenFile:     "testdata/github/issues.created-with-nostory.json",
@@ -164,7 +164,7 @@ func TestPtStoryFromWebhookIssue(t *testing.T) {
 			assert.Equal(t, tc.expectedTitle, ptstory.Title, "expectedTitle")
 			assert.Equal(t, tc.expectedBody, ptstory.Body, "expectedBody")
 			assert.Equal(t, tc.expectedSearchFilters, ptstory.SearchFilters, "expectedSearchFilters")
-			assert.Equal(t, tc.expectedIsDone, ptstory.IsDone, "expectedIsDone")
+			assert.Equal(t, tc.expectedIsClosed, ptstory.IsClosed, "expectedIsClosed")
 		})
 	}
 }
