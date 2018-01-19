@@ -164,25 +164,14 @@ func TestWebhookStory(t *testing.T) {
 			expectedTitle:   "how it works now??",
 			expectedBody:    nil,
 			expectedStoryID: "153983933",
-			expectedGhIssue: issueDetail{
-				repo:          "user123/repo456",
-				id:            "",
-				Title:         "how it works now??",
-				State:         "open",
-				searchFilters: []string{"how it works now?? in:title is:issue repo:user123/repo456"},
-			},
+			expectNoStory:   true,
 		},
 		{
 			givenFile:       "testdata/tracker/story.deleted.json",
 			expectedTitle:   "how it works now??",
 			expectedBody:    nil,
 			expectedStoryID: "153983933",
-			expectedGhIssue: issueDetail{
-				repo:          "user123/repo456",
-				id:            "",
-				Title:         "how it works now??" + noStorySuffix,
-				searchFilters: []string{"how it works now?? in:title is:issue repo:user123/repo456"},
-			},
+			expectNoStory:   true,
 		},
 	}
 

@@ -222,20 +222,7 @@ func TestGithubAPIClient(t *testing.T) {
 				Title:  "should create/update github issue on pt story create/update",
 				Body:   "Hello world",
 			},
-			expectedHistory: []logAction{
-				{
-					Method:             "FindIssue",
-					GivenTitle:         "should create/update github issue on pt story create/update",
-					GivenSearchFilters: []string{"should create/update github issue on pt story create/update in:title is:issue repo:user123/repo456"},
-					GivenState:         "closed",
-				},
-				{
-					Method:     "UpdateIssue",
-					GivenID:    "42",
-					GivenTitle: "should create/update github issue on pt story create/update",
-					GivenState: "closed",
-				},
-			},
+			expectedHistory: []logAction(nil),
 		},
 		{
 			givenFile: "testdata/tracker/story_update_activity.delete.json",
@@ -244,23 +231,7 @@ func TestGithubAPIClient(t *testing.T) {
 				Title:  "should create/update github issue on pt story create/update",
 				Body:   "https://www.pivotaltracker.com/story/show/153926473\r\n\r\nHello world",
 			},
-			expectedHistory: []logAction{
-				{
-					Method:             "FindIssue",
-					GivenTitle:         "should create/update github issue on pt story create/update" + noStorySuffix,
-					GivenSearchFilters: []string{"should create/update github issue on pt story create/update in:title is:issue repo:user123/repo456"},
-				},
-				{
-					Method:  "GetIssue",
-					GivenID: "42",
-				},
-				{
-					Method:     "UpdateIssue",
-					GivenID:    "42",
-					GivenTitle: "should create/update github issue on pt story create/update" + noStorySuffix,
-					GivenBody:  "Hello world",
-				},
-			},
+			expectedHistory: []logAction(nil),
 		},
 	}
 
