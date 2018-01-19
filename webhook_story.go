@@ -66,7 +66,7 @@ func parseWebhookStory(data []byte, githubHTMLURL string, trackerHTMLURL string)
 		}
 	}
 
-	if newTitle != nil || newBody != nil || newState != nil {
+	if newTitle != nil || newBody != nil {
 		story.githubHTMLURL = githubHTMLURL
 		story.URL = fmt.Sprintf("%s/story/show/%s", trackerHTMLURL, story.StoryID)
 		return &story, nil
